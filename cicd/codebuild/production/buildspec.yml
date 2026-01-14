@@ -1,0 +1,58 @@
+version: 0.2
+run-as: root
+
+phases:
+    install:
+        runtime-versions:
+            nodejs: 20
+    pre_build:
+        commands:
+            - echo AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - echo S3_DEPLOY_BUCKET_NAME=$S3_DEPLOY_BUCKET_NAME
+            - echo CODEBUILD_RESOLVED_SOURCE_VERSION=$CODEBUILD_RESOLVED_SOURCE_VERSION
+            - echo DISTRIBUTION_ID=$DISTRIBUTION_ID
+            - YEAR_MONTH=$(date +"%Y%m")
+            - NOW=$YEAR_MONTH$(date +"%d")
+            - FILENAME=archive_front_deploy_${NOW}_$CODEBUILD_RESOLVED_SOURCE_VERSION.zip
+            - echo FILENAME=$FILENAME
+            - BACKUP_FOLDER=backup_archive_$S3_PROJECT_FOLDER
+    build:
+        commands:
+            - echo Build started on `date`
+            - echo load env
+            - aws s3 cp s3://$S3_DOTENV_BUCKET_NAME/$S3_PROJECT_FOLDER/.env.$DEPLOY_ENV .env
+            #       - cat .env
+            - yarn --immutable
+            - yarn build
+            - echo backup file
+            - zip -r $FILENAME dist/
+            - aws s3 cp $FILENAME s3://$S3_DEPLOY_BUCKET_NAME/$BACKUP_FOLDER/$YEAR_MONTH/
+            - echo deploy files
+            - aws s3 sync dist/ s3://$S3_DEPLOY_BUCKET_NAME  --exclude "$BACKUP_FOLDER*" --delete
+            #       - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID  --path "/*"
+            - touch cf.sh
+            - chmod 744 cf.sh
+            - |
+                cat <<EOF > cf.sh
+                echo "cf.sh started"
+                echo "DISTRIBUTION_ID: $DISTRIBUTION_ID"
+                INVALIDATION_ID=\$(aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --query 'Invalidation.Id' --output text)
+                echo "Invalidation created with ID: \$INVALIDATION_ID"
+                check_invalidation_status() {
+                  STATUS=\$(aws cloudfront get-invalidation --distribution-id $DISTRIBUTION_ID --id \$INVALIDATION_ID --query 'Invalidation.Status' --output text)
+                  echo "Invalidation status: \$STATUS"
+                }
+                while true; do
+                  check_invalidation_status
+                  if [ "\$STATUS" == "Completed" ]; then
+                    echo "Invalidation completed."
+                    break
+                  fi
+                  echo "Waiting for invalidation to complete..."
+                  sleep 3
+                done
+                EOF
+            - ./cf.sh
+    post_build:
+        commands:
+            - echo "Build completed successfully."

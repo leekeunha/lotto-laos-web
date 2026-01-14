@@ -1,0 +1,27 @@
+export type RemoteResultDetail = {
+    drawIdx: string;
+    winningDate: string;
+    winningNumber: number[];
+    bonusNumber: string;
+    drawStartDate: string;
+    drawEndDate: string;
+    drawStatus: string;
+    carryoverPrizeAmount: number;
+    grade1TotalPrizeAmount: number;
+    grade1TotalPlayer: number;
+    grade1PrizeAmountPerPlayer: number;
+    grade1PrizeRateORFixed: string;
+    grade2TotalPrizeAmount: number;
+    grade2TotalPlayer: number;
+    grade2PrizeRateORFixed: string;
+    grade3PrizeRateORFixed: string;
+    grade3TotalPlayer: number;
+    grade3TotalPrizeAmount: number;
+    grade4PrizeRateORFixed: string;
+    grade4TotalPlayer: number;
+    grade4TotalPrizeAmount: number;
+    drawVideoUrl: string;
+    totalLinePrice: number;
+    totalLines: string;
+    videoUseTag: string;
+};

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Gold Digger</title>
+        <script src="./asset/js/plugins/jquery-min.js"></script>
+        <script src="./asset/js/phaser.min.js"></script>
+        <script src="./asset/js/phaser_addon.js"></script>
+        <script src="./asset/js/user.js"></script>
+        <script src="./asset/js/loading.js"></script>
+        <script src="./asset/js/title.js"></script>
+        <script src="./asset/js/game.js"></script>
+        <script src="./asset/js/common/util.js"></script>
+        <style>
+            body {
+                margin-top: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <button
+            onclick="CloseMe()"
+            style="
+                z-index: 999;
+                background-color: #4e342e;
+                position: absolute;
+                top: 2%;
+                font-size: x-large;
+                right: 2%;
+                text-align-last: left;
+                padding: 0px 5px 0px 5px;
+                border-radius: 10px;
+                width: 38px;
+                height: 38px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            "
+            type="button"
+        >
+            <img src="./asset/cross.png" alt="" srcset="" />
+        </button>
+        <script src="./asset/js/main.js"></script>
+
+        <script>
+            const STATIC_PATH = './asset/';
+            const IMAGE_PATH = STATIC_PATH;
+            const SOUND_PATH = STATIC_PATH;
+            const IMAGE_FILE_EXTENSION = '.png';
+            const SOUND_FILE_EXTENSION = '.mp3';
+
+            const API_BASE_URL = 'https://laos-member-api.playground.gpexdev.com/';
+
+            const GAME_INIT_API_URL = API_BASE_URL + 'v1/webgame/gold-digger/init';
+            const GAME_START_API_URL = API_BASE_URL + 'v1/webgame/gold-digger/start';
+            const JUDGEMENT_API_URL = API_BASE_URL + 'v1/webgame/gold-digger/judgement';
+            const GAME_WIN_API_URL = API_BASE_URL + 'v1/webgame/gold-digger/win';
+
+            function CloseMe() {
+                window.history.back();
+            }
+
+            window.addEventListener('message', function (event) {
+                if (event.data && event.data.accessToken) {
+                    ACCESS_TOKEN = event.data.accessToken;
+                }
+            });
+        </script>
+    </body>
+</html>

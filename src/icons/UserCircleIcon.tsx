@@ -1,0 +1,20 @@
+import { IconProps } from './types';
+
+export default function UserCircleIcon({ className = '', width = 20, height = 20 }: IconProps) {
+    return (
+        <svg
+            width={width}
+            height={height}
+            viewBox="0 0 25 25"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+        >
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M22.1 12.7a9.6 9.6 0 1 1-19.199 0 9.6 9.6 0 0 1 19.2 0zm-7.2-3.6a2.4 2.4 0 1 1-4.8 0 2.4 2.4 0 0 1 4.8 0zm-2.4 4.8a6 6 0 0 0-5.455 3.5 7.184 7.184 0 0 0 5.455 2.5 7.185 7.185 0 0 0 5.456-2.5 6 6 0 0 0-5.456-3.5z"
+            />
+        </svg>
+    );
+}
